@@ -9,6 +9,6 @@ namespace ControleFinanceiro.Models
         public int IdUsuario { get; set; }
         public int IdConta { get; set; }
         public string Nome { get; set; }
-        public decimal Valor { get; set; }
+        public string Valor { get; set; }
     }
 }
