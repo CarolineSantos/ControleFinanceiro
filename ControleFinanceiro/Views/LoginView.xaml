@@ -2,11 +2,11 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ControleFinanceiro.ViewModel"
-             BackgroundColor="White"
              x:Class="ControleFinanceiro.Views.LoginView">
+    
     <ContentPage.BindingContext>
-        <vm:LoginViewModel />
-    </ContentPage.BindingContext>
+        <vm:LoginViewModel />        
+    </ContentPage.BindingContext>    
 
     <Grid Padding="10" VerticalOptions="Center">
         <Grid.RowDefinitions>
@@ -19,18 +19,17 @@
                    WidthRequest="150" HeightRequest="150"/>
 
             <Label Text="Login" FontFamily="Verdana"
-                   TextColor="Purple" FontSize="30"
-                   FontAttributes="Bold"
-                   HorizontalTextAlignment="Center" />
+                   TextColor="{AppThemeBinding Light=Purple, Dark=MediumPurple}" FontSize="30"
+                   FontAttributes="Bold" HorizontalTextAlignment="Center" />
         </StackLayout>
 
         <StackLayout Grid.Row="1" Spacing="5">
             <Entry TextColor="Black" PlaceholderColor="Gray" BackgroundColor="AliceBlue" Placeholder="Nome do usuário" Text="{Binding Login}" />
             <Entry TextColor="Black" PlaceholderColor="Gray" BackgroundColor="AliceBlue" Placeholder="Senha do usuário" Text="{Binding Senha}" />
-            <Button Text="Logar" HorizontalOptions="Center" BackgroundColor="Purple"
+            <Button Text="Logar" HorizontalOptions="Center" BackgroundColor="MediumPurple"
                     TextColor="White" WidthRequest="300" HeightRequest="40"
                     Command="{Binding LoginCommand}"/>
-            <Label Text="Novo Usuário?" FontAttributes="Bold" TextColor="Black" />
+            <Label Text="Novo Usuário?" FontAttributes="Bold" TextColor="{AppThemeBinding Light=Black, Dark=White}" />
             <Button Text="Registrar" HorizontalOptions="Center" BackgroundColor="DarkSlateGray"
                     TextColor="White" WidthRequest="300" HeightRequest="40"
                     Command="{Binding RegisterCommand}" />

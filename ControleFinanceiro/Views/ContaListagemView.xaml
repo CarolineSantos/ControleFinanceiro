@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ControleFinanceiro.ViewModel"
              Title="Lista Contas"
-             BackgroundColor="White"
              x:Class="ControleFinanceiro.Views.ContaListagemView">
 
     <ContentPage.BindingContext>

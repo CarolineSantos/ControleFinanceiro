@@ -18,8 +18,16 @@ namespace ControleFinanceiro.Views
         public ContaItemsView(Conta _conta)
         {
             InitializeComponent();
-            conta = _conta;
-            Title = conta.Nome;
+
+            if (_conta.IdConta != 0 && _conta.Nome != null)
+            {
+                Application.Current.Properties["Conta"] = _conta;
+                conta = _conta;
+            }
+            else
+                conta = (Conta)Application.Current.Properties["Conta"];
+            
+            Title = conta.Nome + " = R$ " + conta.Valor;
         }
 
         protected async override void OnAppearing()

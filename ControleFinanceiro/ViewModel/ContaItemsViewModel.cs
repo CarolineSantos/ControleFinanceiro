@@ -13,24 +13,12 @@ namespace ControleFinanceiro.ViewModel
     public class ContaItemsViewModel : BaseViewModel
     {
         ContaItemService itemService;
-        private int _IdContaItem;
         private int _IdConta;
         private string _Nome;
         private string _Valor;
-
-        public int IdContaItem
-        {
-            set
-            {
-                this._IdContaItem = value;
-                OnPropertyChanged();
-            }
-            get
-            {
-                return this._IdContaItem;
-            }
-        }
-
+        private string _Competencia;
+        private int _Parcelas;
+                
         public int IdConta
         {
             set
@@ -67,6 +55,32 @@ namespace ControleFinanceiro.ViewModel
             get
             {
                 return this._Valor;
+            }
+        }
+
+        public string Competencia
+        {
+            set
+            {
+                this._Competencia = DateTime.Now.ToString();
+                OnPropertyChanged();
+            }
+            get
+            {
+                return this._Competencia;
+            }
+        }
+
+        public int Parcelas
+        {
+            set
+            {
+                this._Parcelas = 1;
+                OnPropertyChanged();
+            }
+            get
+            {
+                return this._Parcelas;
             }
         }
 
@@ -109,15 +123,29 @@ namespace ControleFinanceiro.ViewModel
         {
             try
             {
+                Conta conta = new Conta();
+
+                if (IdConta == 0)
+                {
+                    conta = (Conta)Application.Current.Properties["Conta"];
+                    IdConta = conta.IdConta;
+                }
+
                 itemService = new ContaItemService();
-                var contaItem = await itemService.GetContaItemNome(1, Nome);
+                var contaItem = await itemService.GetContaItemNome(IdConta, Nome);
 
                 if (contaItem == null)
-                    await itemService.AddContaItem(IdContaItem, IdConta, Nome, Valor);
+                    await itemService.AddContaItem(IdConta, Nome, Valor, Competencia, Parcelas);
                 else
-                    await itemService.UpdateContaItem(IdContaItem,IdConta, Nome, Valor);
+                    await itemService.UpdateContaItem(IdConta, Nome, Valor);
 
-                Conta conta = new Conta();
+                //Aletar valor de  conta pai
+                decimal valorSomar = Convert.ToDecimal(conta.Valor.Replace("R$ ",""));
+                valorSomar += Convert.ToDecimal(Valor.Replace("R$ ", ""));
+                conta.Valor = "R$ " + valorSomar.ToString();
+                ContaService contaService = new ContaService();
+                contaService.UpdateConta(conta.IdConta, conta.Nome, conta.Valor);
+
                 conta.IdConta = IdConta;
                 Valor = "R$ 0,00";
                 Nome = string.Empty;                

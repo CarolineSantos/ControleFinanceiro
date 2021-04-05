@@ -19,11 +19,13 @@ namespace ControleFinanceiro.Services
             firebase = new FirebaseClient("https://controlefinanceiro-cf392-default-rtdb.firebaseio.com/");
         }
 
-        public async Task AddContaItem(int id, int idConta, string nome, string valor)
+        public async Task AddContaItem(int IdConta, string Nome, string Valor, string Competencia, int Parcelas)
         {
             await firebase.Child("ContaItems")
                 .PostAsync(
-                    new ContaItem() { IdConta = idConta, IdContaItem = id, Nome = nome, Valor = valor });
+                    new ContaItem() { IdConta = IdConta, Nome = Nome
+                        , Valor = Valor, Competencia = Competencia, Parcelas = Parcelas
+                    });
         }
 
         public async Task<List<ContaItem>> GetContaItems()
@@ -34,18 +36,19 @@ namespace ControleFinanceiro.Services
                 {
                     IdConta = item.Object.IdConta,
                     Nome = item.Object.Nome,
-                    Valor = item.Object.Valor
+                    Valor = item.Object.Valor,
+                    Competencia = item.Object.Competencia
                 }).ToList();
         }
 
-        public async Task<ContaItem> GetContaItem(int idContaItem)
+        public async Task<ContaItem> GetContaItem(string Nome)
         {
             try
             {
                 var conta = (await firebase
                     .Child("ContaItems")
                     .OnceAsync<ContaItem>())
-                    .Where(a => a.Object.IdContaItem == idContaItem).FirstOrDefault();
+                    .Where(a => a.Object.Nome == Nome).FirstOrDefault();
 
                 return await firebase.Child("ContaItems")
                     .Child(conta.Key).OnceSingleAsync<ContaItem>();
@@ -56,14 +59,14 @@ namespace ControleFinanceiro.Services
             }
         }
 
-        public async Task UpdateContaItem(int IdContaItem ,int idConta, string nome, string valor)
+        public async Task UpdateContaItem(int idConta, string nome, string valor)
         {
             try
             {
                 var toUpdateConta = (await firebase
                     .Child("ContaItems")
                     .OnceAsync<ContaItem>())
-                    .Where(a => a.Object.IdContaItem == IdContaItem).FirstOrDefault();
+                    .Where(a => a.Object.Nome == nome).FirstOrDefault();
 
                 await firebase.Child("ContaItems")
                     .Child(toUpdateConta.Key)
@@ -75,14 +78,14 @@ namespace ControleFinanceiro.Services
             }
         }
 
-        public async Task DeleteContaItem(int idContaItem)
+        public async Task DeleteContaItem(string nome)
         {
             try
             {
                 var toUpdateConta = (await firebase
                     .Child("ContaItems")
                     .OnceAsync<ContaItem>())
-                    .Where(a => a.Object.IdContaItem == idContaItem).FirstOrDefault();
+                    .Where(a => a.Object.Nome == nome).FirstOrDefault();
 
                 await firebase.Child("ContaItems")
                     .Child(toUpdateConta.Key)
