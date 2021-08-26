@@ -130,7 +130,7 @@ namespace ControleFinanceiro.ViewModel
                 if (Result)
                 {
                     Preferences.Set("Login", Login);
-                    await Application.Current.MainPage.Navigation.PushAsync(new ContaListagemView());
+                    await Application.Current.MainPage.Navigation.PushAsync(new MenuView());
                 }
                 else
                     await Application.Current.MainPage.DisplayAlert("Erro", "Usuário/Senha inválidos", "Ok");
