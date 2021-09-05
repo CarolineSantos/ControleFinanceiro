@@ -19,7 +19,7 @@ namespace ControleFinanceiro.ViewModel
         {
             ListaMenu.Add(new MenuModel() { Titulo = "Contas", Icone="", Pagina= typeof(ContaListagemView) });
             ListaMenu.Add(new MenuModel() { Titulo = "Meses", Icone = "", Pagina = typeof(MesesView) });
-
+            //ListaMenu.Add(new MenuModel() { Titulo = "Logout", Icone = "", Pagina = typeof(LogoutView) });
             return ListaMenu;
         }
     }

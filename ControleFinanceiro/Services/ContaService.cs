@@ -5,12 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace ControleFinanceiro.Services
 {
     public class ContaService
     {
         FirebaseClient firebase;
+        UsuarioService usuarioService = new UsuarioService();
 
         public ContaService()
         {
@@ -25,7 +27,7 @@ namespace ControleFinanceiro.Services
                     new Conta() { IdConta = id, IdUsuario = idUsuario, Nome = nome, Valor = valor });
         }
 
-        public async Task<List<Conta>> GetContas(int idUsuario)
+        public async Task<List<Conta>> GetContas()
         {
             return (await firebase
                 .Child("Contas")
@@ -33,8 +35,11 @@ namespace ControleFinanceiro.Services
                 {
                     IdConta = item.Object.IdConta,
                     Nome = item.Object.Nome,
-                    Valor = item.Object.Valor
-                }).ToList();
+                    Valor = item.Object.Valor,
+                    IdUsuario = item.Object.IdUsuario
+                })
+                .Where(a => a.IdUsuario == Convert.ToInt32(Application.Current.Properties["IDUsuario"]))
+                .ToList();
         }
 
         public async Task<Conta> GetConta(int idConta)

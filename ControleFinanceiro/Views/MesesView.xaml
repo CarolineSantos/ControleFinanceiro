@@ -1,15 +1,25 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ControleFinanceiro.Views.MesesView">
     <ContentPage.Content>
         <StackLayout>
-            <DatePicker MinimumDate="01/08/2021"
-            MaximumDate="01/12/2050"
-            Date="01/12/2021" />
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+            <Picker x:Name="picker"
+                Title="Selecion o Ano"
+                TitleColor="White" SelectedItem="{Binding SelectedAno}">   
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>2021</x:String>
+                        <x:String>2022</x:String>
+                        <x:String>2023</x:String>
+                        <x:String>2024</x:String>
+                        <x:String>2025</x:String>
+                        <x:String>2026</x:String>
+                        <x:String>2027</x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+            <CollectionView></CollectionView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

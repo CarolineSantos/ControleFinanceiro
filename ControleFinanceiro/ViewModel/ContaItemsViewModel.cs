@@ -16,7 +16,7 @@ namespace ControleFinanceiro.ViewModel
         private int _IdConta;
         private string _Nome;
         private string _Valor;
-        private string _Competencia;
+        private DateTime _Competencia;
         private int _Parcelas;
                 
         public int IdConta
@@ -58,11 +58,11 @@ namespace ControleFinanceiro.ViewModel
             }
         }
 
-        public string Competencia
+        public DateTime Competencia
         {
             set
             {
-                this._Competencia = DateTime.Now.ToString();
+                this._Competencia = value;
                 OnPropertyChanged();
             }
             get
@@ -75,7 +75,7 @@ namespace ControleFinanceiro.ViewModel
         {
             set
             {
-                this._Parcelas = 1;
+                this._Parcelas = value;
                 OnPropertyChanged();
             }
             get
@@ -135,7 +135,15 @@ namespace ControleFinanceiro.ViewModel
                 var contaItem = await itemService.GetContaItemNome(IdConta, Nome);
 
                 if (contaItem == null)
-                    await itemService.AddContaItem(IdConta, Nome, Valor, Competencia, Parcelas);
+                {
+                    for (int i = 1; i <= Parcelas; i++)
+                    {
+                        await itemService.AddContaItem(IdConta, Nome, Valor, Competencia, Parcelas, Convert.ToInt32(Application.Current.Properties["IDUsuario"]));
+                        Competencia.AddMonths(1);
+                    }
+                    
+                }
+                    
                 else
                     await itemService.UpdateContaItem(IdConta, Nome, Valor);
 
@@ -162,6 +170,11 @@ namespace ControleFinanceiro.ViewModel
         private Task AtualizarContaItemCommandAsync()
         {
             throw new NotImplementedException();
+        }
+
+        private void CarregarMeses() 
+        {
+            //var contaItem = await itemService.GetContaItems();
         }
     }
 }

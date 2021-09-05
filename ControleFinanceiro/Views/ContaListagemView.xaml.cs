@@ -16,8 +16,7 @@ namespace ControleFinanceiro.Views
     {
         public ContaService contaService = new ContaService();
         public List<Conta> Contas = new List<Conta>();
-        int idUsuario = 1;
-
+        
         public ContaListagemView()
         {
             InitializeComponent();
@@ -31,7 +30,7 @@ namespace ControleFinanceiro.Views
 
         public async void ExibeContas()
         {
-            var conta = await contaService.GetContas(idUsuario);
+            var conta = await contaService.GetContas();
             listaContas.ItemsSource = conta;
         }        
 
@@ -45,11 +44,7 @@ namespace ControleFinanceiro.Views
         {
             string nomeConta = await DisplayPromptAsync("Nova Conta", "por exemplo Cartão A");
             if(!String.IsNullOrEmpty(nomeConta))
-                contaService.AddConta(1,1, nomeConta, "R$ 0,00");
-
-            //string result = await DisplayPromptAsync("Question 2", "What's 5 + 5?", initialValue: "10", maxLength: 2, keyboard: Keyboard.Numeric);
-
-            //Debug.WriteLine("Action: " + action);
+                contaService.AddConta(1,Convert.ToInt32(Application.Current.Properties["IDUsuario"]),nomeConta, "R$ 0,00");
         }
 
         private void listaContaItens_Changed(object sender, SelectionChangedEventArgs e)

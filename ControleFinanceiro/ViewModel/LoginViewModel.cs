@@ -1,6 +1,7 @@
 ﻿using ControleFinanceiro.Services;
 using ControleFinanceiro.Views;
 using System;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -9,6 +10,7 @@ namespace ControleFinanceiro.ViewModel
 {
     public class LoginViewModel : BaseViewModel
     {
+        private Hash hash = new Hash(SHA512.Create());
         private int _IdUsuario;
         private string _Login;
         private string _Senha;
@@ -100,7 +102,10 @@ namespace ControleFinanceiro.ViewModel
                 var userService = new UsuarioService();
 
                 if (!string.IsNullOrEmpty(Login) && !string.IsNullOrEmpty(Senha))
-                    Result = await userService.Registrar(IdUsuario, Login, Senha);
+                {
+                    string senha = hash.CriptografarSenha(Senha);
+                    Result = await userService.Registrar(IdUsuario, Login, senha);
+                }
 
                 if (Result)
                     await Application.Current.MainPage.DisplayAlert("Sucesso", "Usuário Registrado", "Ok");
@@ -125,7 +130,8 @@ namespace ControleFinanceiro.ViewModel
             {
                 IsBusy = true;
                 var userService = new UsuarioService();//cria instancia
-                Result = await userService.Login(Login, Senha);
+                string senha = hash.CriptografarSenha(Senha);
+                Result = await userService.Login(Login, senha);
 
                 if (Result)
                 {

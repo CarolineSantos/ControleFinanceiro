@@ -6,12 +6,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace ControleFinanceiro.Services
 {
     public class ContaItemService
     {
         FirebaseClient firebase;
+        ContaService contaService = new ContaService();
 
         public ContaItemService()
         {
@@ -19,12 +21,17 @@ namespace ControleFinanceiro.Services
             firebase = new FirebaseClient("https://controlefinanceiro-cf392-default-rtdb.firebaseio.com/");
         }
 
-        public async Task AddContaItem(int IdConta, string Nome, string Valor, string Competencia, int Parcelas)
+        public async Task AddContaItem(int IdConta, string Nome, string Valor, DateTime Competencia, int Parcelas, int idUsuario)
         {
             await firebase.Child("ContaItems")
                 .PostAsync(
-                    new ContaItem() { IdConta = IdConta, Nome = Nome
-                        , Valor = Valor, Competencia = Competencia, Parcelas = Parcelas
+                    new ContaItem() { 
+                        IdConta = IdConta,
+                        Nome = Nome,
+                        Valor = Valor,
+                        Competencia = Competencia,
+                        Parcelas = Parcelas,
+                        IdUsuario = idUsuario 
                     });
         }
 
@@ -38,7 +45,9 @@ namespace ControleFinanceiro.Services
                     Nome = item.Object.Nome,
                     Valor = item.Object.Valor,
                     Competencia = item.Object.Competencia
-                }).ToList();
+                })
+                .Where(a => a.IdUsuario == Convert.ToInt32(Application.Current.Properties["IDUsuario"]))
+                .ToList();
         }
 
         public async Task<ContaItem> GetContaItem(string Nome)
@@ -96,6 +105,7 @@ namespace ControleFinanceiro.Services
                 throw;
             }
         }
+
         public async Task<ContaItem> GetContaItemNome(int idContaItem, string nome)
         {
             try
@@ -114,6 +124,24 @@ namespace ControleFinanceiro.Services
             {
                 throw;
             }
+        }
+
+        public async Task<List<ContaItem>> GetContaItemsPorAno(DateTime MesAno)
+        {
+            List<Conta> listaConta = new List<Conta>();
+            
+            return (await firebase
+                .Child("ContaItems")
+                .OnceAsync<ContaItem>()).Select(item => new ContaItem
+                {
+                    IdConta = item.Object.IdConta,
+                    Nome = item.Object.Nome,
+                    Valor = item.Object.Valor,
+                    Competencia = item.Object.Competencia
+                })
+                .Where(a => a.IdUsuario == Convert.ToInt32(Application.Current.Properties["IDUsuario"]) 
+                        && a.Competencia.Year == MesAno.Year && a.Competencia.Month == MesAno.Month)
+                .ToList();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using ControleFinanceiro.Models;
 using Firebase.Database;
 using Firebase.Database.Query;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -48,9 +49,14 @@ namespace ControleFinanceiro.Services
         {
             var user = (await firebase.Child("Usuarios")
                 .OnceAsync<Usuario>())
-                .Where(u => u.Object.Login == login)
-                .Where(u => u.Object.Senha == senha)
+                .Where(u => u.Object.Login == login && u.Object.Senha == senha)
                 .FirstOrDefault();
+
+            if (user != null)
+            {
+                Xamarin.Forms.Application.Current.Properties["access_token"] = user.Key;
+                Xamarin.Forms.Application.Current.Properties["IDUsuario"] = user.Object.IdUsuario;
+            }                
 
             return (user != null);
         }

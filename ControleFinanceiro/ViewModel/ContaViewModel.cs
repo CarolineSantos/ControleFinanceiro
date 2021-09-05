@@ -197,10 +197,7 @@ namespace ControleFinanceiro.ViewModel
             try
             {
                 contaService = new ContaService();
-                conta = await contaService.GetContas(IdUsuario);
-
-                //await Application.Current.MainPage.DisplayAlert("Sucesso", "Contato deletado com sucesso", "Ok");                    
-                //await ExibeContas();
+                conta = await contaService.GetContas();
             }
             catch (Exception ex)
             {
