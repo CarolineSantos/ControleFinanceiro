@@ -15,14 +15,14 @@ namespace ControleFinanceiro.Views
         ContaItemService service;
         Conta conta = new Conta();
         
-        public ContaItemsView(Conta _conta)
+        public ContaItemsView()
         {
+            conta = (Conta)Application.Current.Properties["ContaSelecionada"];
             InitializeComponent();
 
-            if (_conta.IdConta != 0 && _conta.Nome != null)
+            if (conta.IdConta != 0 && conta.Nome != null)
             {
-                Application.Current.Properties["Conta"] = _conta;
-                conta = _conta;
+                Application.Current.Properties["Conta"] = conta;
             }
             else
                 conta = (Conta)Application.Current.Properties["Conta"];
@@ -30,7 +30,7 @@ namespace ControleFinanceiro.Views
             Title = conta.Nome + " = R$ " + conta.Valor;
         }
 
-        protected async override void OnAppearing()
+        protected override void OnAppearing()
         {//OnAppearing é diparado sempre que a página for exebida
             ExibirContaItems();
             this.IdConta.Text = conta.IdConta.ToString();

@@ -62,7 +62,7 @@ namespace ControleFinanceiro.ViewModel
         {
             set
             {
-                this._Competencia = value;
+                this._Competencia = DateTime.Now;
                 OnPropertyChanged();
             }
             get
@@ -132,34 +132,32 @@ namespace ControleFinanceiro.ViewModel
                 }
 
                 itemService = new ContaItemService();
-                var contaItem = await itemService.GetContaItemNome(IdConta, Nome);
-
-                if (contaItem == null)
+                var dataAtual = DateTime.Now;
+                                
+                for (int i = 1; i <= Parcelas; i++)
                 {
-                    for (int i = 1; i <= Parcelas; i++)
-                    {
-                        await itemService.AddContaItem(IdConta, Nome, Valor, Competencia, Parcelas, Convert.ToInt32(Application.Current.Properties["IDUsuario"]));
-                        Competencia.AddMonths(1);
-                    }
-                    
+                    if (i == 1)
+                        dataAtual = Competencia;
+
+                    await itemService.AddContaItem(IdConta, Nome, Valor, dataAtual, Parcelas, Convert.ToInt32(Application.Current.Properties["IDUsuario"]));
+
+                    dataAtual = dataAtual.AddMonths(1);
                 }
-                    
-                else
-                    await itemService.UpdateContaItem(IdConta, Nome, Valor);
+                //await itemService.UpdateContaItem(IdConta, Nome, Valor);
 
                 //Aletar valor de  conta pai
-                decimal valorSomar = Convert.ToDecimal(conta.Valor.Replace("R$ ",""));
-                valorSomar += Convert.ToDecimal(Valor.Replace("R$ ", ""));
+                decimal valorSomar = Convert.ToDecimal(conta.Valor.Replace("R$ ","").Replace(",","."));
+                valorSomar += Convert.ToDecimal(Valor.Replace("R$ ", "").Replace(",", "."));
                 conta.Valor = "R$ " + valorSomar.ToString();
                 ContaService contaService = new ContaService();
-                contaService.UpdateConta(conta.IdConta, conta.Nome, conta.Valor);
+                await contaService.UpdateConta(conta.IdConta, conta.Nome, conta.Valor);
 
                 conta.IdConta = IdConta;
                 Valor = "R$ 0,00";
                 Nome = string.Empty;                
 
                 await Application.Current.MainPage.DisplayAlert("Sucess", "Item incluído com sucesso", "Ok");
-                await Application.Current.MainPage.Navigation.PushAsync(new ContaItemsView(conta));
+                await Application.Current.MainPage.Navigation.PopAsync();
             }
             catch (Exception ex)
             {

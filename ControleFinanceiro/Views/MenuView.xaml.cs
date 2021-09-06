@@ -20,7 +20,10 @@ namespace ControleFinanceiro.Views
         {
             InitializeComponent();
             paginaMestreList.ItemsSource = menuViewModel.CarregarMenu();
-            Detail = new NavigationPage((Page)Activator.CreateInstance(typeof(ContaListagemView)));
+            if(Application.Current.Properties["ContaSelecionada"] != null)
+                Detail = new NavigationPage((Page)Activator.CreateInstance(typeof(ContaItemsView)));
+            else 
+                Detail = new NavigationPage((Page)Activator.CreateInstance(typeof(ContaListagemView)));
         }
 
         private void OnMenuItemSelected(object sender, SelectedItemChangedEventArgs e)

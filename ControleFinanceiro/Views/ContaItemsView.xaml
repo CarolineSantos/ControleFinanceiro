@@ -2,6 +2,8 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:ControleFinanceiro.ViewModel"
+             NavigationPage.HasNavigationBar="True"
+             NavigationPage.BackButtonTitle="False"
              x:Class="ControleFinanceiro.Views.ContaItemsView">
 
     <ContentPage.BindingContext>
@@ -39,7 +41,7 @@
                         <Grid HeightRequest="30" WidthRequest="200" Padding="5,5,0,5">
                             <Label Grid.Column="0" Text="{Binding Nome}" TextColor="{AppThemeBinding Light=Black, Dark=White}" VerticalOptions="Center" FontSize="Medium"/>
                             <Label Grid.Column="1" Text="{Binding Valor}" TextColor="{AppThemeBinding Light=Black, Dark=White}" VerticalOptions="Center" FontSize="Medium" />
-                            <Label Grid.Column="3" Text="{Binding Competencia}" TextColor="{AppThemeBinding Light=Black, Dark=White}" VerticalOptions="Center" FontSize="Medium" />
+                            <Label Grid.Column="2" Text="{Binding Competencia}" TextColor="{AppThemeBinding Light=Black, Dark=White}" VerticalOptions="Center" FontSize="Medium" />
                     </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

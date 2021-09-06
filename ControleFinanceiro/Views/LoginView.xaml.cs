@@ -15,6 +15,7 @@ namespace ControleFinanceiro.Views
         public LoginView()
         {
             InitializeComponent();
+            Application.Current.Properties["ContaSelecionada"] = null;
         }
     }
 }

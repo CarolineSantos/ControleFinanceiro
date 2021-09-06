@@ -23,7 +23,7 @@ namespace ControleFinanceiro.Views
             ExibeContas();
         }
 
-        protected async override void OnAppearing()
+        protected override void OnAppearing()
         {//OnAppearing é diparado sempre que a página for exebida
             ExibeContas();
         }
@@ -44,13 +44,15 @@ namespace ControleFinanceiro.Views
         {
             string nomeConta = await DisplayPromptAsync("Nova Conta", "por exemplo Cartão A");
             if(!String.IsNullOrEmpty(nomeConta))
-                contaService.AddConta(1,Convert.ToInt32(Application.Current.Properties["IDUsuario"]),nomeConta, "R$ 0,00");
+                await contaService.AddConta(1,Convert.ToInt32(Application.Current.Properties["IDUsuario"]),nomeConta, "R$ 0,00");
         }
 
         private void listaContaItens_Changed(object sender, SelectionChangedEventArgs e)
         {
             var conta = (Conta)e.CurrentSelection.FirstOrDefault();
-            Navigation.PushAsync(new ContaItemsView(conta));
+            Application.Current.Properties["ContaSelecionada"] = conta;
+            //Navigation.PushAsync(new ContaItemsView(conta));
+            Navigation.PushAsync(new MenuView());
         }
     }
 }

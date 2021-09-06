@@ -14,7 +14,6 @@ namespace ControleFinanceiro.ViewModel
         private int _IdUsuario;
         private string _Login;
         private string _Senha;
-        private bool _Result;
         private bool _IsBusy;
 
         public int IdUsuario
