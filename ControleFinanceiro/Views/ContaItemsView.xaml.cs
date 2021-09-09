@@ -42,7 +42,7 @@ namespace ControleFinanceiro.Views
 
             var listContaItems = await service.GetContaItems();
 
-            listaContas.ItemsSource = listContaItems.Where(a => a.IdConta == conta.IdConta);
+            listaContas.ItemsSource = listContaItems;
         }
 
         private async void btnFechar_Clicked(object sender, EventArgs e)
@@ -89,6 +89,21 @@ namespace ControleFinanceiro.Views
 
                 this.popuplayout.IsVisible = !this.popuplayout.IsVisible;
             }
+        }
+
+        public async void FecharAddItem() 
+        {
+            await Task.WhenAny<bool>
+                  (
+                    this.popuplayout.FadeTo(0, 200, Easing.SinInOut)
+                  );
+
+            this.popuplayout.IsVisible = !this.popuplayout.IsVisible;
+        }
+
+        private void btnRecalcular_Clicked(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -33,8 +33,12 @@
                 <Button x:Name="btnFechar" Text="Fechar" BackgroundColor="Purple" TextColor="White" Clicked="btnFechar_Clicked"/>
             </StackLayout>            
         </Frame>
+
+        <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+            <Button x:Name="btnNovoItem" Text="Novo Item" BackgroundColor="Purple" TextColor="White" Clicked="btnNovoItem_Clicked" Margin="10"/>
+            <Button x:Name="btnRecalcular" Text="Recalcular" BackgroundColor="Green" TextColor="White" Command="{Binding RecalcularCommand}" Margin="10"/>
+        </StackLayout>
         
-        <Button x:Name="btnNovoItem" WidthRequest="-1" Text="Novo Item" BackgroundColor="Purple" Clicked="btnNovoItem_Clicked" Margin="10"/>
         <CollectionView x:Name="listaContas">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>

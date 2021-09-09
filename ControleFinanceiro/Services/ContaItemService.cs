@@ -37,6 +37,9 @@ namespace ControleFinanceiro.Services
 
         public async Task<List<ContaItem>> GetContaItems()
         {
+            Conta conta = new Conta();
+            conta = (Conta)Application.Current.Properties["Conta"];
+
             return (await firebase
                 .Child("ContaItems")
                 .OnceAsync<ContaItem>()).Select(item => new ContaItem
@@ -46,7 +49,7 @@ namespace ControleFinanceiro.Services
                     Valor = item.Object.Valor,
                     Competencia = item.Object.Competencia
                 })
-                .Where(a => a.IdUsuario == Convert.ToInt32(Application.Current.Properties["IDUsuario"]))
+                .Where(a => a.IdUsuario == Convert.ToInt32(Application.Current.Properties["IDUsuario"]) && a.IdConta == conta.IdConta)
                 .ToList();
         }
 
@@ -120,9 +123,9 @@ namespace ControleFinanceiro.Services
                         .Child(conta.Key).OnceSingleAsync<ContaItem>();
                 else return null;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
 
@@ -142,6 +145,27 @@ namespace ControleFinanceiro.Services
                 .Where(a => a.IdUsuario == Convert.ToInt32(Application.Current.Properties["IDUsuario"]) 
                         && a.Competencia.Year == MesAno.Year && a.Competencia.Month == MesAno.Month)
                 .ToList();
+        }
+
+        public async Task<Decimal> CalcularTotalConta() 
+        {            
+            try
+            {
+                decimal total = 0;
+                Conta conta = new Conta();
+                conta = (Conta)Application.Current.Properties["Conta"];
+                total = (await firebase
+                    .Child("ContaItems")
+                    .OnceAsync<ContaItem>())                    
+                    .Where(b => b.Object.IdConta == conta.IdConta)
+                    .Sum(a => Convert.ToDecimal(a.Object.Valor.Replace("R$ ","").Replace(",", ".")));
+
+                return total;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using ControleFinanceiro.Models;
 using ControleFinanceiro.Services;
+using ControleFinanceiro.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace ControleFinanceiro.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ContaListagemView : ContentPage
     {
-        public ContaService contaService = new ContaService();
+        public ContaViewModel contaModel= new ContaViewModel();
         public List<Conta> Contas = new List<Conta>();
         
         public ContaListagemView()
@@ -28,12 +29,6 @@ namespace ControleFinanceiro.Views
             ExibeContas();
         }
 
-        public async void ExibeContas()
-        {
-            var conta = await contaService.GetContas();
-            listaContas.ItemsSource = conta;
-        }        
-
         private void btnNovo_Clicked(object sender, EventArgs e)
         {
             var conta = new Conta();
@@ -43,8 +38,15 @@ namespace ControleFinanceiro.Views
         async void OnActionSheetCancelDeleteClicked(object sender, EventArgs e)
         {
             string nomeConta = await DisplayPromptAsync("Nova Conta", "por exemplo Cartão A");
-            if(!String.IsNullOrEmpty(nomeConta))
-                await contaService.AddConta(1,Convert.ToInt32(Application.Current.Properties["IDUsuario"]),nomeConta, "R$ 0,00");
+            if (!String.IsNullOrEmpty(nomeConta))
+                await contaModel.InserirConta(nomeConta);
+                //await contaService.AddConta(1, Convert.ToInt32(Application.Current.Properties["IDUsuario"]), nomeConta, "R$ 0,00");
+        }
+
+        public async void ExibeContas()
+        {
+            var conta = await contaModel.GetContas();
+            listaContas.ItemsSource = conta;
         }
 
         private void listaContaItens_Changed(object sender, SelectionChangedEventArgs e)

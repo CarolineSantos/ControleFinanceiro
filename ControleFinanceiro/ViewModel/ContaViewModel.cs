@@ -3,6 +3,7 @@ using ControleFinanceiro.Services;
 using ControleFinanceiro.Views;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -12,12 +13,16 @@ namespace ControleFinanceiro.ViewModel
 {
     public class ContaViewModel : BaseViewModel
     {
+        public List<Conta> Contas = new List<Conta>();
         ContaService contaService;
+
+        #region Propridades 
         private int _IdConta;
         private int _IdUsuario;
         private string _Nome;
         private decimal _Valor;
 
+               
         public int IdConta
         {
             set
@@ -69,20 +74,20 @@ namespace ControleFinanceiro.ViewModel
                 return "R$ " + this._Valor.ToString().Replace(".", ",");
             }
         }
+        #endregion
 
+        #region Commands
         public ICommand ExibirContaCommand { get; set; }
         public ICommand InserirContaCommand { get; set; }
         public ICommand AtualizarContaCommand { get; set; }
         public ICommand DeletarContaCommand { get; set; }
-        public ICommand GetContasCommand { get; set; }
+        #endregion
 
         public ContaViewModel()
         {
             ExibirContaCommand = new Command(async () => await ExibirContaCommandAsync());
-            InserirContaCommand = new Command(async () => await InserirContaCommandAsync());
             AtualizarContaCommand = new Command(async () => await AtualizarContaCommandAsync());
             DeletarContaCommand = new Command(async () => await DeletarContaCommandAsync());
-            GetContasCommand = new Command(async () => await GetContasCommandAsync());
         }
 
         private async Task ExibirContaCommandAsync()
@@ -115,24 +120,25 @@ namespace ControleFinanceiro.ViewModel
             // return conta;
         }
 
-        private async Task InserirContaCommandAsync()
+        public async Task InserirConta(string nomeConta)
         {
             try
             {
                 contaService = new ContaService();
-                var conta = await contaService.GetContaNome(IdUsuario, Nome);
-
-                if (conta == null)
-                    await contaService.AddConta(IdUsuario, IdConta, Nome, Valor);
-                else
-                    await contaService.UpdateConta(Convert.ToInt32(IdConta), Nome, Valor);
+                var conta = await contaService.GetContas();
+                //var conta = await contaService.GetContaNome(IdUsuario, Nome);
+                                
+                    IdConta = 1+conta.Select(c => c.IdConta).LastOrDefault();
+                    await contaService.AddConta(IdConta, IdUsuario, nomeConta, Valor);
+               
+                    //await contaService.UpdateConta(Convert.ToInt32(IdConta), Nome, Valor);
 
                 IdConta = 0;
                 Valor = "0";
                 Nome = string.Empty;
 
                 await Application.Current.MainPage.DisplayAlert("Sucess", "Contato incluído com sucesso", "Ok");
-                await Application.Current.MainPage.Navigation.PushAsync(new ContaListagemView());
+                //await Application.Current.MainPage.Navigation.PopAsync();
             }
             catch (Exception ex)
             {
@@ -190,7 +196,7 @@ namespace ControleFinanceiro.ViewModel
             }
         }
 
-        private async Task<List<Conta>> GetContasCommandAsync()
+        public async Task<List<Conta>> GetContas()
         {
             var conta = new List<Conta>();
 
@@ -198,6 +204,24 @@ namespace ControleFinanceiro.ViewModel
             {
                 contaService = new ContaService();
                 conta = await contaService.GetContas();
+            }
+            catch (Exception ex)
+            {
+                await Application.Current.MainPage.DisplayAlert("Erro", "Conta não encontrada : " + ex.Message, "Ok");
+            }
+
+            return conta;
+        }
+
+        public async Task<List<Conta>> GetContas(int ano, int mes)
+        {
+            var conta = new List<Conta>();
+
+            try
+            {
+                contaService = new ContaService();
+
+                conta = await contaService.GetContas(ano, mes);
             }
             catch (Exception ex)
             {

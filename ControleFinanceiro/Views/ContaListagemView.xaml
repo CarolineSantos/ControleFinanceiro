@@ -12,12 +12,12 @@
 
     <StackLayout>
         <StackLayout HorizontalOptions="CenterAndExpand" Orientation="Horizontal">
-            <Button x:Name="btnNovo" WidthRequest="200" Text="+ Novo" BackgroundColor="Purple" Clicked="btnNovo_Clicked"  />
+            <Button x:Name="btnNovo" WidthRequest="200" Text="+ Novo" BackgroundColor="Purple" Clicked="btnNovo_Clicked" />
         </StackLayout>
 
         <CollectionView x:Name="listaContas" Margin="25" VerticalOptions="Start" SelectionMode="Single" SelectionChanged="listaContaItens_Changed">
             <CollectionView.ItemsLayout>
-                <GridItemsLayout Orientation="Vertical" Span="4" HorizontalItemSpacing="5"/>
+                <GridItemsLayout Orientation="Vertical" Span="3" HorizontalItemSpacing="5" VerticalItemSpacing="5"/>
             </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
                 <DataTemplate>

@@ -4,22 +4,39 @@
              x:Class="ControleFinanceiro.Views.MesesView">
     <ContentPage.Content>
         <StackLayout>
-            <Picker x:Name="picker"
-                Title="Selecion o Ano"
-                TitleColor="White" SelectedItem="{Binding SelectedAno}">   
-                <Picker.ItemsSource>
-                    <x:Array Type="{x:Type x:String}">
-                        <x:String>2021</x:String>
-                        <x:String>2022</x:String>
-                        <x:String>2023</x:String>
-                        <x:String>2024</x:String>
-                        <x:String>2025</x:String>
-                        <x:String>2026</x:String>
-                        <x:String>2027</x:String>
-                    </x:Array>
-                </Picker.ItemsSource>
-            </Picker>
-            <CollectionView></CollectionView>
+            <StackLayout Orientation="Horizontal" Margin="10">
+                <Label Text="Ano: " FontSize="20" TextColor="{AppThemeBinding Light=Black, Dark=White}" VerticalOptions="End"/>
+                <Picker x:Name="listaAnos"
+                        VerticalOptions="End"
+                    Title="Selecione o Ano"
+                    TitleColor="{AppThemeBinding Light=Black, Dark=White}" SelectedItem="{Binding SelectedAno}"
+                        SelectedIndexChanged="Ano_SelectedIndexChanged">                  
+                </Picker>
+                <Label Text="Mês: " FontSize="20" TextColor="{AppThemeBinding Light=Black, Dark=White}" VerticalOptions="End"/>
+                <Picker x:Name="listaMeses"
+                    VerticalOptions="End"
+                    Title="Selecione o Mês" 
+                    TitleColor="{AppThemeBinding Light=Black, Dark=White}" SelectedItem="{Binding SelectedAno}"
+                        SelectedIndexChanged="Mes_SelectedIndexChanged">
+               
+                </Picker>
+            </StackLayout>
+            <CollectionView x:Name="listaContas" Margin="25" VerticalOptions="Start" SelectionMode="Single" SelectionChanged="listaContaItens_Changed">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical" Span="3" HorizontalItemSpacing="5" VerticalItemSpacing="5"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame BorderColor="Black" Padding="0" CornerRadius="10">
+                            <FlexLayout Direction="Column">
+                                <Label Text="{Binding Nome}" FontSize="30" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" TextColor="Black"></Label>
+                                <Label Text="  " VerticalTextAlignment="Center" TextColor="Black"></Label>
+                                <Label Text="{Binding Valor}" FontAttributes="Bold" VerticalTextAlignment="Center" HorizontalTextAlignment="Center" TextColor="Black"></Label>
+                            </FlexLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

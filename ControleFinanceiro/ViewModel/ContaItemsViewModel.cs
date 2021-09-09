@@ -3,6 +3,7 @@ using ControleFinanceiro.Services;
 using ControleFinanceiro.Views;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -13,6 +14,9 @@ namespace ControleFinanceiro.ViewModel
     public class ContaItemsViewModel : BaseViewModel
     {
         ContaItemService itemService;
+        ContaService contaService;
+
+        #region Propriedades
         private int _IdConta;
         private string _Nome;
         private string _Valor;
@@ -83,11 +87,13 @@ namespace ControleFinanceiro.ViewModel
                 return this._Parcelas;
             }
         }
+        #endregion
 
         public ICommand InserirContaItemCommand { get; set; }
         public ICommand AtualizarContaItemCommand { get; set; }
         public ICommand DeletarContaItemCommand { get; set; }
         public ICommand GetContaItemsCommand { get; set; }
+        public ICommand RecalcularCommand { get; set; }
 
         public ContaItemsViewModel() 
         {
@@ -95,6 +101,28 @@ namespace ControleFinanceiro.ViewModel
             AtualizarContaItemCommand = new Command(async () => await AtualizarContaItemCommandAsync());
             DeletarContaItemCommand = new Command(async () => await DeletarContaItemCommandAsync());
             GetContaItemsCommand = new Command(async () => await GetContaItemsCommandAsync());
+            RecalcularCommand = new Command(async () => RecalcularCommandAsync());
+        }
+
+        private async void RecalcularCommandAsync()
+        {
+            try
+            {
+                var contaItems = new List<ContaItem>();
+                itemService = new ContaItemService();
+                contaService = new ContaService();
+                Conta conta = new Conta();
+                conta = (Conta)Application.Current.Properties["Conta"];
+                decimal total = await itemService.CalcularTotalConta();
+
+                await contaService.UpdateConta(conta.IdConta, conta.Nome, "R$ "+ total.ToString());
+
+                await Application.Current.MainPage.Navigation.PushAsync(new MenuView());
+            }
+            catch (Exception ex)
+            {
+                await Application.Current.MainPage.DisplayAlert("Erro", "Item da conta não encontrada : " + ex.Message, "Ok");
+            }
         }
 
         private async Task<List<ContaItem>> GetContaItemsCommandAsync()
@@ -157,7 +185,9 @@ namespace ControleFinanceiro.ViewModel
                 Nome = string.Empty;                
 
                 await Application.Current.MainPage.DisplayAlert("Sucess", "Item incluído com sucesso", "Ok");
-                await Application.Current.MainPage.Navigation.PopAsync();
+                ContaItemsView contaItemsView = new ContaItemsView();
+                contaItemsView.FecharAddItem();
+                //await Application.Current.MainPage.Navigation.PopAsync();
             }
             catch (Exception ex)
             {
@@ -168,11 +198,6 @@ namespace ControleFinanceiro.ViewModel
         private Task AtualizarContaItemCommandAsync()
         {
             throw new NotImplementedException();
-        }
-
-        private void CarregarMeses() 
-        {
-            //var contaItem = await itemService.GetContaItems();
         }
     }
 }

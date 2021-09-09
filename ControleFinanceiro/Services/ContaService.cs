@@ -42,6 +42,21 @@ namespace ControleFinanceiro.Services
                 .ToList();
         }
 
+        public async Task<List<Conta>> GetContas(int ano, int mes)
+        {
+            return (await firebase
+                .Child("Contas")
+                .OnceAsync<Conta>()).Select(item => new Conta
+                {
+                    IdConta = item.Object.IdConta,
+                    Nome = item.Object.Nome,
+                    Valor = item.Object.Valor,
+                    IdUsuario = item.Object.IdUsuario
+                })
+                .Where(a => a.IdUsuario == Convert.ToInt32(Application.Current.Properties["IDUsuario"]))
+                .ToList();
+        }
+
         public async Task<Conta> GetConta(int idConta)
         {
             try
