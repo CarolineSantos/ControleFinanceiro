@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<page:PopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:page="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+             xmlns:local="clr-namespace:ControleFinanceiro.ViewModel"
+             x:Class="ControleFinanceiro.Views.ContaItemAddView">
+
+    <ContentPage.BindingContext>
+        <local:ContaItemsViewModel />
+    </ContentPage.BindingContext>
+    
+    <Frame HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    BackgroundColor="White" 
+                    CornerRadius="8"
+                    HeightRequest="300"
+                    WidthRequest="300">
+
+        <StackLayout>
+            <Label Text="Cadastro Item" FontAttributes="Bold" FontSize="Large" TextColor="Indigo" HorizontalOptions="Center" />
+            <Label x:Name="IdConta" Text="{Binding IdConta}" IsVisible="false" />
+            <Entry x:Name="txtNome" Text="{Binding Nome }" Placeholder="Nome" PlaceholderColor="Gray" TextColor="Black" />
+            <Entry x:Name="txtValor" Text="{Binding Valor}" Keyboard="Numeric" Placeholder="R$ 0.000,00" PlaceholderColor="Gray" TextColor="Black" >
+                <Entry.Behaviors>
+                    <local:MascaraMoeda />
+                </Entry.Behaviors>
+            </Entry>
+            <DatePicker MinimumDate="01/01/2019" Date="{Binding Competencia}" TextColor="{AppThemeBinding Light=Black, Dark=Black}" AutomationProperties.IsInAccessibleTree="False" />
+            <Entry x:Name="txtParcela" Text="{Binding Parcelas }" PlaceholderColor="Gray" TextColor="Black" Keyboard="Numeric" MaxLength="2"/>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                <Button x:Name="btnIncluir" Text="Salvar" BackgroundColor="Purple" Command="{Binding InserirContaItemCommand}" TextColor="White" HorizontalOptions="FillAndExpand"/>
+                <Button x:Name="btnFechar" Text="Fechar" BackgroundColor="Purple" TextColor="White" Clicked="Fechar_Clicked" HorizontalOptions="FillAndExpand"/>
+            </StackLayout>
+        </StackLayout>
+    </Frame>
+</page:PopupPage>

@@ -186,7 +186,6 @@ namespace ControleFinanceiro.ViewModel
 
                 await Application.Current.MainPage.DisplayAlert("Sucess", "Item incluído com sucesso", "Ok");
                 ContaItemsView contaItemsView = new ContaItemsView();
-                contaItemsView.FecharAddItem();
                 //await Application.Current.MainPage.Navigation.PopAsync();
             }
             catch (Exception ex)

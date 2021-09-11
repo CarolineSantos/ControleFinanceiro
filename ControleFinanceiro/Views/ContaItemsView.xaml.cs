@@ -1,5 +1,7 @@
 ﻿using ControleFinanceiro.Models;
 using ControleFinanceiro.Services;
+using Rg.Plugins.Popup.Pages;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -33,7 +35,7 @@ namespace ControleFinanceiro.Views
         protected override void OnAppearing()
         {//OnAppearing é diparado sempre que a página for exebida
             ExibirContaItems();
-            this.IdConta.Text = conta.IdConta.ToString();
+            //this.IdConta.Text = conta.IdConta.ToString();
         }
 
         private async void ExibirContaItems() 
@@ -43,62 +45,11 @@ namespace ControleFinanceiro.Views
             var listContaItems = await service.GetContaItems();
 
             listaContas.ItemsSource = listContaItems;
-        }
-
-        private async void btnFechar_Clicked(object sender, EventArgs e)
-        {
-            await Task.WhenAny<bool>
-                  (
-                    this.popuplayout.FadeTo(0, 200, Easing.SinInOut)
-                  );
-
-            this.popuplayout.IsVisible = !this.popuplayout.IsVisible;
-            btnNovoItem.IsVisible = true;
-        }
+        }        
 
         private async void btnNovoItem_Clicked(object sender, EventArgs e)
         {
-            if (!this.popuplayout.IsVisible)
-            {
-                this.popuplayout.IsVisible = !this.popuplayout.IsVisible;
-                this.popuplayout.AnchorX = 1;
-                this.popuplayout.AnchorY = 1;
-
-                Animation scaleAnimation = new Animation(
-                    f => this.popuplayout.Scale = f,
-                    0.5,
-                    1,
-                    Easing.SinInOut);
-
-                Animation fadeAnimation = new Animation(
-                    f => this.popuplayout.Opacity = f,
-                    0.2,
-                    1,
-                    Easing.SinInOut);
-
-                scaleAnimation.Commit(this.popuplayout, "popupScaleAnimation", 250);
-                fadeAnimation.Commit(this.popuplayout, "popupFadeAnimation", 250);
-                btnNovoItem.IsVisible = false;
-            }
-            else
-            {
-                await Task.WhenAny<bool>
-                  (
-                    this.popuplayout.FadeTo(0, 200, Easing.SinInOut)
-                  );
-
-                this.popuplayout.IsVisible = !this.popuplayout.IsVisible;
-            }
-        }
-
-        public async void FecharAddItem() 
-        {
-            await Task.WhenAny<bool>
-                  (
-                    this.popuplayout.FadeTo(0, 200, Easing.SinInOut)
-                  );
-
-            this.popuplayout.IsVisible = !this.popuplayout.IsVisible;
+            await PopupNavigation.Instance.PushAsync((PopupPage)Activator.CreateInstance(typeof(ContaItemAddView)));
         }
 
         private void btnRecalcular_Clicked(object sender, EventArgs e)

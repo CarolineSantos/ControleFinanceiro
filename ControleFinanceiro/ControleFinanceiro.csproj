@@ -22,12 +22,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\ContaItemAddView.xaml.cs">
+      <DependentUpon>ContaItemAddView.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\MenuView.xaml.cs">
       <DependentUpon>MenuView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Views\ContaItemAddView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Views\ContaListagemView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>

@@ -11,29 +11,6 @@
     </ContentPage.BindingContext>
     
     <StackLayout>
-        <Frame x:Name="popuplayout"
-                HasShadow="True"
-                IsVisible="False"
-                Scale="0"
-                BackgroundColor="White"
-                AbsoluteLayout.LayoutFlags="All"
-                AbsoluteLayout.LayoutBounds="1,1,0.10,0.10">
-            <StackLayout>
-                <Label Text="Firebase Realtime Database" FontAttributes="Bold" FontSize="Large" TextColor="Indigo" HorizontalOptions="Center" />
-                <Label x:Name="IdConta" Text="{Binding IdConta}" IsVisible="false" />
-                <Entry x:Name="txtNome" Text="{Binding Nome }" Placeholder="Nome" PlaceholderColor="Gray" TextColor="Black" />
-                <Entry x:Name="txtValor" Text="{Binding Valor}" Keyboard="Numeric" Placeholder="R$ 0.000,00" PlaceholderColor="Gray" TextColor="Black" >
-                    <Entry.Behaviors>
-                        <local:MascaraMoeda />
-                    </Entry.Behaviors>
-                </Entry>
-                <DatePicker MinimumDate="01/01/2019" Date="{Binding Competencia}" TextColor="{AppThemeBinding Light=Black, Dark=Black}" AutomationProperties.IsInAccessibleTree="False" />
-                <Entry x:Name="txtParcela" Text="{Binding Parcelas }" PlaceholderColor="Gray" TextColor="Black" Keyboard="Numeric" MaxLength="2"/>
-                <Button x:Name="btnIncluir" Text="Salvar" BackgroundColor="Purple" Command="{Binding InserirContaItemCommand}" TextColor="White"/>
-                <Button x:Name="btnFechar" Text="Fechar" BackgroundColor="Purple" TextColor="White" Clicked="btnFechar_Clicked"/>
-            </StackLayout>            
-        </Frame>
-
         <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
             <Button x:Name="btnNovoItem" Text="Novo Item" BackgroundColor="Purple" TextColor="White" Clicked="btnNovoItem_Clicked" Margin="10"/>
             <Button x:Name="btnRecalcular" Text="Recalcular" BackgroundColor="Green" TextColor="White" Command="{Binding RecalcularCommand}" Margin="10"/>
